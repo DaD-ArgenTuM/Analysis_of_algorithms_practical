@@ -1,0 +1,28 @@
+def quick_sort(arr):
+    # Base case: 0 or 1 element is already sorted
+    if len(arr) <= 1:
+        return arr
+
+    # Step 1: Choose a pivot (here, we pick the last element)
+    pivot = arr[-1]
+    left = []
+    right = []
+    equal = []
+
+    # Step 2: Partition the array
+    for num in arr:
+        if num < pivot:
+            left.append(num)
+        elif num > pivot:
+            right.append(num)
+        else:
+            equal.append(num)
+
+    # Step 3: Recursively sort and combine
+    return quick_sort(left) + equal + quick_sort(right)
+
+# Example usage
+arr = [29, 10, 14, 37, 14]
+print("Original array:", arr)
+sorted_arr = quick_sort(arr)
+print("Sorted array:", sorted_arr)
