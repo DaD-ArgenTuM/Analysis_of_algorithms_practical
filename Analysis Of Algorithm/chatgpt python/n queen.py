@@ -1,52 +1,36 @@
-def print_solution(board):
-    for row in board:
-        print(" ".join("Q" if col else "." for col in row))
-    print()
-
 def is_safe(board, row, col, n):
-    # Check this column on upper side
+    # Check vertical and diagonals
     for i in range(row):
-        if board[i][col]:
+        if board[i] == col or \
+           board[i] - i == col - row or \
+           board[i] + i == col + row:
             return False
-
-    # Check upper-left diagonal
-    i, j = row, col
-    while i >= 0 and j >= 0:
-        if board[i][j]:
-            return False
-        i -= 1
-        j -= 1
-
-    # Check upper-right diagonal
-    i, j = row, col
-    while i >= 0 and j < n:
-        if board[i][j]:
-            return False
-        i -= 1
-        j += 1
-
     return True
 
-def solve_n_queens_util(board, row, n, solutions):
-    if row == n:
-        # All queens placed
-        solutions.append([row[:] for row in board])
-        return
-
-    for col in range(n):
-        if is_safe(board, row, col, n):
-            board[row][col] = 1
-            solve_n_queens_util(board, row + 1, n, solutions)
-            board[row][col] = 0  # Backtrack
-
 def solve_n_queens(n):
-    board = [[0 for _ in range(n)] for _ in range(n)]
-    solutions = []
-    solve_n_queens_util(board, 0, n, solutions)
+    def backtrack(row):
+        if row == n:
+            result.append(board[:])
+            return
+        for col in range(n):
+            if is_safe(board, row, col, n):
+                board[row] = col
+                backtrack(row + 1)
 
-    print(f"Total solutions for {n}-Queens: {len(solutions)}\n")
-    for sol in solutions:
-        print_solution(sol)
+    def print_board(board):
+        for row in board:
+            line = ["." for _ in range(n)]
+            line[row] = "Q"
+            print(" ".join(line))
+        print()
 
-# Example usage
+    board = [-1] * n  # board[i] = column position of queen in row i
+    result = []
+    backtrack(0)
+
+    print(f"Total solutions for {n}-Queens: {len(result)}\n")
+    for solution in result:
+        print_board(solution)
+
+# Try it with 4 queens
 solve_n_queens(4)
