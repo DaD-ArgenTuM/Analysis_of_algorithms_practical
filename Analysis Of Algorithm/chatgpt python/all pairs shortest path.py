@@ -1,31 +1,23 @@
-# Function to implement Floyd-Warshall algorithm
 def floyd_warshall(graph):
     n = len(graph)
-    
-    # Initialize distance matrix (copy of graph)
-    dist = [row[:] for row in graph]
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j])
+    return graph
 
-    # Apply Floyd-Warshall DP
-    for k in range(n):  # intermediate vertex
-        for i in range(n):  # source
-            for j in range(n):  # destination
-                if dist[i][k] + dist[k][j] < dist[i][j]:
-                    dist[i][j] = dist[i][k] + dist[k][j]
-
-    return dist
-
-# Example usage:
+# Example
 INF = float('inf')
 graph = [
-    [0,     3,    INF,   5],
-    [2,     0,    INF,   4],
-    [INF,   1,    0,     INF],
-    [INF,   INF,  2,     0]
+    [0,   1,   4,   INF],
+    [INF, 0,   2,   6],
+    [INF, INF, 0,   3],
+    [7,   INF, INF, 0]
 ]
+
 
 result = floyd_warshall(graph)
 
-# Print the result
-print("All-Pairs Shortest Paths:")
+# Print result
 for row in result:
     print(row)
