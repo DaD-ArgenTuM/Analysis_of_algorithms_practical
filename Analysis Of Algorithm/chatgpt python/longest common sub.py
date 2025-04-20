@@ -1,37 +1,35 @@
-def find_lcs(X, Y):
-    m = len(X)
-    n = len(Y)
+def lcs(word1, word2):
+    m = len(word1)
+    n = len(word2)
 
-    # Step 1: Create a table to store lengths
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    # Create a box (table) to keep track of matches
+    box = [[0] * (n + 1) for _ in range(m + 1)]
 
-    # Step 2: Fill the table
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if X[i - 1] == Y[j - 1]:
-                dp[i][j] = 1 + dp[i - 1][j - 1]
+    # Fill the box with how many letters match
+    for i in range(m):
+        for j in range(n):
+            if word1[i] == word2[j]:
+                box[i+1][j+1] = box[i][j] + 1
             else:
-                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+                box[i+1][j+1] = max(box[i][j+1], box[i+1][j])
 
-    # Step 3: Build the LCS string by tracing the table
+    # Now go backward to find the actual matching letters
     i, j = m, n
-    lcs = []
+    result = ""
+
     while i > 0 and j > 0:
-        if X[i - 1] == Y[j - 1]:
-            lcs.append(X[i - 1])
+        if word1[i-1] == word2[j-1]:
+            result = word1[i-1] + result  # Add to front
             i -= 1
             j -= 1
-        elif dp[i - 1][j] > dp[i][j - 1]:
+        elif box[i-1][j] > box[i][j-1]:
             i -= 1
         else:
             j -= 1
 
-    # The LCS is built backwards, so reverse it
-    return ''.join(reversed(lcs))
+    return result
 
-# Example usage
-X = "ABAABA"
-Y = "BABBAB"
-
-lcs_result = find_lcs(X, Y)
-print("LCS is:", lcs_result)
+# Try it
+word1 = "ABAABA"
+word2 = "BABBAB"
+print("LCS is:", lcs(word1, word2))
