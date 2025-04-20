@@ -1,11 +1,11 @@
-def lcs(X, Y):
+def find_lcs(X, Y):
     m = len(X)
     n = len(Y)
 
-    # Create a 2D table to store lengths of LCS
+    # Step 1: Create a table to store lengths
     dp = [[0] * (n + 1) for _ in range(m + 1)]
 
-    # Build the dp table from bottom up
+    # Step 2: Fill the table
     for i in range(1, m + 1):
         for j in range(1, n + 1):
             if X[i - 1] == Y[j - 1]:
@@ -13,12 +13,25 @@ def lcs(X, Y):
             else:
                 dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
 
-    # Return the length of the LCS
-    return dp[m][n]
+    # Step 3: Build the LCS string by tracing the table
+    i, j = m, n
+    lcs = []
+    while i > 0 and j > 0:
+        if X[i - 1] == Y[j - 1]:
+            lcs.append(X[i - 1])
+            i -= 1
+            j -= 1
+        elif dp[i - 1][j] > dp[i][j - 1]:
+            i -= 1
+        else:
+            j -= 1
+
+    # The LCS is built backwards, so reverse it
+    return ''.join(reversed(lcs))
 
 # Example usage
-X = "AGGTAB"
-Y = "GXTXAYB"
+X = "ABAABA"
+Y = "BABBAB"
 
-length = lcs(X, Y)
-print("Length of Longest Common Subsequence:", length)
+lcs_result = find_lcs(X, Y)
+print("LCS is:", lcs_result)
